@@ -12,13 +12,6 @@
 #include <thread>
 using namespace std;
 
-// =========================
-// ENUM: UserRole
-// =========================
-// Represents the roles a user can have in the library system.
-// - ADMIN: Full control over the system, including managing books and users.
-// - FACULTY: Can borrow books with extended due dates and view their borrowed books.
-// - STUDENT: Can borrow books with standard due dates and view their borrowed books.
 enum UserRole
 {
     ADMIN,
@@ -26,10 +19,6 @@ enum UserRole
     STUDENT
 };
 
-// =========================
-// FUNCTION: saveBooks
-// =========================
-// Saves the updated list of books to the books.txt file.
 void saveBooks(const vector<vector<string>> &books)
 {
     ofstream booksOut("books.txt");
@@ -39,7 +28,7 @@ void saveBooks(const vector<vector<string>> &books)
         return;
     }
 
-    booksOut << "ID,Title,Author,Year,Copies\n"; // Optional header
+    booksOut << "ID,Title,Author,Year,Copies\n";
     for (const auto &book : books)
     {
         booksOut << book[0] << ", \"" << book[1] << "\", \"" << book[2] << "\", "
@@ -48,64 +37,44 @@ void saveBooks(const vector<vector<string>> &books)
     booksOut.close();
 }
 
-// =========================
-// CLASS: Library
-// =========================
-// Encapsulates all the functionality of the library management system.
-// Includes user authentication, book management, and utility functions.
-// Maintains the state of the currently logged-in user and their role.
 class Library
 {
 private:
-    static int next_id;      // Tracks the next available user ID for new accounts.
-    int current_user_id;     // Stores the ID of the currently logged-in user.
-    string current_username; // Stores the username of the currently logged-in user.
-    string current_password; // Stores the password of the currently logged-in user.
-    UserRole current_role;   // Stores the role of the currently logged-in user.
-    bool is_logged_in;       // Indicates whether a user is currently logged in.
+    static int next_id;
+    int current_user_id;
+    string current_username;
+    string current_password;
+    UserRole current_role;
+    bool is_logged_in;
 
-    // A map to associate role names (strings) with their corresponding UserRole enum values.
     map<string, UserRole> roleMap = {
         {"ADMIN", ADMIN},
         {"FACULTY", FACULTY},
         {"STUDENT", STUDENT}};
 
 public:
-    // =========================
-    // CONSTRUCTOR: Library
-    // =========================
-    // Initializes the library system with default values.
-    // By default, no user is logged in, and the role is set to STUDENT.
     Library();
 
-    // =========================
-    // FUNCTION DECLARATIONS
-    // =========================
-    void signup();                                                  // Allows a new user to create an account.
-    void login();                                                   // Authenticates a user by verifying their credentials.
-    void logout();                                                  // Resets the current user state and ends the session.
-    void displayBooks(bool returnToMenu = true);                    // Lists all the books available in the library.
-    void searchBooks();                                             // Allows users to search for books by title.
-    void addBook();                                                 // Allows admin users to add new books to the library.
-    void editBook();                                                // Allows admin users to modify the details of an existing book.
-    void removeBook();                                              // Allows admin users to delete a book from the library.
-    void borrowBook();                                              // Allows logged-in users to borrow a book.
-    void returnBook();                                              // Allows logged-in users to return a borrowed book.
-    void checkLateFees();                                           // Allows admin users to view all users with late fees.
-    void viewBorrowedBooks(bool returnToMenu = true);               // Displays the books currently borrowed by the logged-in user.
-    void showMainMenu();                                            // Displays the main menu for users who are not logged in.
-    void showUserMenu();                                            // Displays the menu for logged-in users.
-    void createDefaultFiles();                                      // Initializes the system by creating default database files.
-    double calculateLateFees(const string &dueDate, UserRole role); // Calculates lateness fees for a user.
-    bool checkFileExists(const string &filename);                   // Checks if a file exists in the system.
-    string cleanString(const string &input);                        // Removes unnecessary spaces and special characters from a string.
+    void signup();
+    void login();
+    void logout();
+    void displayBooks(bool returnToMenu = true);
+    void searchBooks();
+    void addBook();
+    void editBook();
+    void removeBook();
+    void borrowBook();
+    void returnBook();
+    void checkLateFees();
+    void viewBorrowedBooks(bool returnToMenu = true);
+    void showMainMenu();
+    void showUserMenu();
+    void createDefaultFiles();
+    double calculateLateFees(const string &dueDate, UserRole role);
+    bool checkFileExists(const string &filename);
+    string cleanString(const string &input);
 };
 
-// =========================
-// STATIC VARIABLE: next_id
-// =========================
-// Shared across all instances of the Library class.
-// Used to assign unique IDs to new users.
 int Library::next_id = 15;
 
 Library::Library()
@@ -116,13 +85,6 @@ Library::Library()
     current_role = STUDENT;
     is_logged_in = false;
 }
-
-// =========================
-// FUNCTION: cleanString
-// =========================
-// Help from copilot
-// Removes unnecessary spaces and special characters from a string.
-// Ensures that input strings are properly formatted before processing.
 
 string Library::cleanString(const string &input)
 {
@@ -139,32 +101,18 @@ string Library::cleanString(const string &input)
     return cleaned;
 }
 
-// =========================
-// FUNCTION: checkFileExists
-// =========================
-// Checks if a file exists in the system.
-// Returns true if the file exists, otherwise false.
-
 bool Library::checkFileExists(const string &filename)
 {
     ifstream file(filename);
     return file.good();
 }
 
-// =========================
-// FUNCTION: createDefaultFiles
-// =========================
-// Initializes the system by creating default database files.
-// Creates sample data for books, users, and borrowed records if the files do not exist.
-// Scenario:
-// - If the system is run for the first time, this function ensures that the required files are created.
 void Library::createDefaultFiles()
 {
-    // Create books.txt
     ofstream booksFile("books.txt");
     if (booksFile.is_open())
     {
-        booksFile << "ID,Title,Author,Year,Copies\n"; // Optional header
+        booksFile << "ID,Title,Author,Year,Copies\n";
 
         booksFile << "1,\"C++ Programming Basics\",\"John Doe\",2019,5\n";
         booksFile << "2,\"Data Structures and Algorithms\",\"Jane Smith\",2020,3\n";
@@ -190,7 +138,6 @@ void Library::createDefaultFiles()
         booksFile.close();
     }
 
-    // Create People.txt
     ofstream peopleFile("People.txt");
     if (peopleFile.is_open())
     {
@@ -200,7 +147,6 @@ void Library::createDefaultFiles()
         peopleFile.close();
     }
 
-    // Create users.txt
     ofstream usersFile("users.txt");
     if (usersFile.is_open())
     {
@@ -211,18 +157,10 @@ void Library::createDefaultFiles()
     }
 }
 
-// =========================
-// FUNCTION: signup
-// =========================
-// Allows a new user to create an account.
-// Assigns a unique ID to the user and saves their credentials in the system.
-// Scenario:
-// - A student wants to create an account to borrow books.
 void Library::signup()
 {
     string username, password;
 
-    // Get username/password
     cout << "Create your Username: ";
     cin.ignore();
     getline(cin, username);
@@ -232,7 +170,6 @@ void Library::signup()
     getline(cin, password);
     password = cleanString(password);
 
-    // Open files
     ofstream usersFile("users.txt", ios::app);
     ofstream peopleFile("People.txt", ios::app);
 
@@ -242,13 +179,10 @@ void Library::signup()
         return;
     }
 
-    // Write to users.txt
     usersFile << next_id << ", \"" << username << "\", \"STUDENT\", \"" << password << "\"\n";
 
-    // Write FRESH record to People.txt
     peopleFile << "\"" << next_id << "\", \"" << username << "\", \"Student\", \"None\", \"N/A\", \"N/A\", \"$0\"\n";
 
-    // Update system state
     current_user_id = next_id;
     current_username = username;
     current_password = password;
@@ -264,13 +198,6 @@ void Library::signup()
     showUserMenu();
 }
 
-// =========================
-// FUNCTION: login
-// =========================
-// Authenticates a user by verifying their credentials.
-// Sets the current user state upon successful login.
-// Scenario:
-// - A faculty member logs in to borrow books with extended due dates.
 void Library::login()
 {
     string username, password;
@@ -330,12 +257,6 @@ void Library::login()
     cerr << "Invalid username or password!\n";
 }
 
-// =========================
-// FUNCTION: logout
-// =========================
-// Resets the current user state and ends the session.
-// Scenario:
-// - A user logs out after completing their tasks.
 void Library::logout()
 {
     cout << " Logging out...." << endl;
@@ -346,16 +267,10 @@ void Library::logout()
     current_username = "";
     current_password = "";
     is_logged_in = false;
-    // fix from copilot, preventing the main menu from showing up after logging out
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     this_thread::sleep_for(chrono::seconds(1));
 }
 
-// =========================
-// FUNCTION: displayBooks
-// =========================
-// Displays all the books available in the library.
-// Admin users are given additional options to manage books.
 void Library::displayBooks(bool returnToMenu)
 {
     ifstream booksFile("books.txt");
@@ -369,7 +284,6 @@ void Library::displayBooks(bool returnToMenu)
 
     string line;
 
-    // Check for and skip header
     getline(booksFile, line);
     if (line.find("ID") == string::npos)
     {
@@ -468,11 +382,6 @@ void Library::displayBooks(bool returnToMenu)
     }
 }
 
-// =========================
-// FUNCTION: searchBooks
-// =========================
-// Allows users to search for books by title.
-// Displays matching books if found, otherwise notifies the user.
 void Library::searchBooks()
 {
     string searchTitle;
@@ -536,11 +445,6 @@ void Library::searchBooks()
     showUserMenu();
 }
 
-// =========================
-// FUNCTION: addBook
-// =========================
-// Allows admin users to add new books to the library.
-// Prompts the admin to enter book details such as title, author, year, and stock.
 void Library::addBook()
 {
     if (current_role != ADMIN)
@@ -549,10 +453,9 @@ void Library::addBook()
         return;
     }
 
-    // Find the highest existing ID
     ifstream inFile("books.txt");
     string line;
-    getline(inFile, line); // bug fixed with aid of ChatGPT: skip header
+    getline(inFile, line);
     int maxId = 0;
 
     while (getline(inFile, line))
@@ -599,11 +502,6 @@ void Library::addBook()
     showUserMenu();
 }
 
-// =========================
-// FUNCTION: editBook
-// =========================
-// Allows admin users to edit the details of an existing book.
-// Admins can modify the title, author, year, or stock of a book.
 void Library::editBook()
 {
     if (current_role != ADMIN)
@@ -612,7 +510,6 @@ void Library::editBook()
         return;
     }
 
-    // Read all books into memory
     ifstream inFile("books.txt");
     if (!inFile.is_open())
     {
@@ -623,7 +520,6 @@ void Library::editBook()
     vector<vector<string>> books;
     string line;
 
-    // Skip header
     getline(inFile, line);
 
     while (getline(inFile, line))
@@ -657,7 +553,6 @@ void Library::editBook()
     }
     inFile.close();
 
-    // Display books without returning to menu
     cout << "\n=========== Library Book Collection ===========\n\n";
     for (size_t i = 0; i < books.size(); i++)
     {
@@ -672,13 +567,11 @@ void Library::editBook()
     }
     cout << "=============================================\n";
 
-    // Get book ID to edit
     int bookId;
     cout << "Enter the ID of the book you want to edit: ";
     cin >> bookId;
-    cin.ignore(); // Clear newline
+    cin.ignore();
 
-    // Find the book
     bool found = false;
     for (auto &book : books)
     {
@@ -700,7 +593,7 @@ void Library::editBook()
             cout << "4. Stock\n";
             cout << "Enter your choice: ";
             cin >> choice;
-            cin.ignore(); // Clear newline
+            cin.ignore();
 
             switch (choice)
             {
@@ -738,7 +631,6 @@ void Library::editBook()
         return;
     }
 
-    // Write all books back to file
     ofstream outFile("books.txt");
     if (!outFile.is_open())
     {
@@ -747,7 +639,7 @@ void Library::editBook()
         return;
     }
 
-    outFile << "ID,Title,Author,Year,Copies\n"; // Write header
+    outFile << "ID,Title,Author,Year,Copies\n";
     for (const auto &book : books)
     {
         outFile << book[0] << ", \"" << book[1] << "\", \"" << book[2] << "\", "
@@ -761,11 +653,6 @@ void Library::editBook()
     showUserMenu();
 }
 
-// =========================
-// FUNCTION: removeBook
-// =========================
-// Allows admin users to remove a book from the library.
-// Admins are prompted to select a book by its ID for removal.
 void Library::removeBook()
 {
     if (current_role != ADMIN)
@@ -774,7 +661,6 @@ void Library::removeBook()
         return;
     }
 
-    // Read all books into memory
     ifstream inFile("books.txt");
     if (!inFile.is_open())
     {
@@ -785,7 +671,6 @@ void Library::removeBook()
     vector<vector<string>> books;
     string line;
 
-    // Skip header
     getline(inFile, line);
 
     while (getline(inFile, line))
@@ -819,7 +704,6 @@ void Library::removeBook()
     }
     inFile.close();
 
-    // Display books without returning to menu
     cout << "\n=========== Library Book Collection ===========\n\n";
     for (size_t i = 0; i < books.size(); i++)
     {
@@ -834,13 +718,11 @@ void Library::removeBook()
     }
     cout << "=============================================\n";
 
-    // Get book ID to remove
     int bookId;
     cout << "Enter the ID of the book you want to remove: ";
     cin >> bookId;
-    cin.ignore(); // Clear newline
+    cin.ignore();
 
-    // Find and remove the book
     bool found = false;
     for (auto it = books.begin(); it != books.end(); ++it)
     {
@@ -861,7 +743,6 @@ void Library::removeBook()
         return;
     }
 
-    // Write remaining books back to file
     ofstream outFile("books.txt");
     if (!outFile.is_open())
     {
@@ -870,7 +751,7 @@ void Library::removeBook()
         return;
     }
 
-    outFile << "ID,Title,Author,Year,Copies\n"; // Write header
+    outFile << "ID,Title,Author,Year,Copies\n";
     for (const auto &book : books)
     {
         outFile << book[0] << ", \"" << book[1] << "\", \"" << book[2] << "\", "
@@ -884,11 +765,6 @@ void Library::removeBook()
     showUserMenu();
 }
 
-// =========================
-// FUNCTION: borrowBook
-// =========================
-// Allows logged-in users to borrow a book from the library.
-// Updates the user's borrowed books and adjusts the stock of the book.
 void Library::borrowBook()
 {
     if (!is_logged_in)
@@ -899,8 +775,6 @@ void Library::borrowBook()
 
     displayBooks(false);
 
-    // Get book ID with robust input validation
-    // Edit made by DeepSeek AI: Added comprehensive input validation with maximum tries
     int bookId;
     const int maxTries = 3;
     int tries = 0;
@@ -930,8 +804,6 @@ void Library::borrowBook()
         }
     } while (tries < maxTries);
 
-    // Load book data with improved error handling
-    // Edit made by DeepSeek AI: Added more detailed error messages
     ifstream booksFile("books.txt");
     if (!booksFile.is_open())
     {
@@ -946,7 +818,6 @@ void Library::borrowBook()
     string bookTitle;
     int availableCopies = 0;
 
-    // Skip header
     getline(booksFile, line);
 
     while (getline(booksFile, line))
@@ -1010,8 +881,6 @@ void Library::borrowBook()
         return;
     }
 
-    // Update People.txt with improved date handling
-    // Edit made by DeepSeek AI: Added cross-platform date handling and error checking///////////////////////////////////
     vector<vector<string>> people;
     bool userFound = false;
     ifstream peopleIn("People.txt");
@@ -1022,7 +891,6 @@ void Library::borrowBook()
         return;
     }
 
-    // Skip header
     getline(peopleIn, line);
 
     while (getline(peopleIn, line))
@@ -1062,7 +930,6 @@ void Library::borrowBook()
                 }
                 else
                 {
-                    // Check if already borrowed
                     if (person[3].find("(" + to_string(bookId) + ")") != string::npos)
                     {
                         cerr << "Error: You have already borrowed this book.\n";
@@ -1072,8 +939,7 @@ void Library::borrowBook()
                     }
                     person[3] += ", " + bookTitle + " (" + to_string(bookId) + ")";
                 }
-                /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                // Set dates with improved error handling, By DeepSeek AI///////////////////////////////////////////////////////
+
                 time_t now = time(0);
                 if (now == -1)
                 {
@@ -1128,7 +994,6 @@ void Library::borrowBook()
     }
     peopleIn.close();
 
-    // Create new record if needed
     if (!userFound)
     {
         time_t now = time(0);
@@ -1183,8 +1048,7 @@ void Library::borrowBook()
             "$0"};
         people.push_back(newUser);
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    // Update books quantity
+
     for (auto &book : books)
     {
         if (stoi(book[0]) == bookId)
@@ -1194,7 +1058,6 @@ void Library::borrowBook()
         }
     }
 
-    // Save files with error checking
     saveBooks(books);
 
     ofstream peopleOut("People.txt");
@@ -1214,15 +1077,10 @@ void Library::borrowBook()
     peopleOut.close();
 
     cout << "Successfully borrowed: " << bookTitle << "\n";
-    cout << "Due date: " << people.back()[5] << "\n"; // Show due date to user
+    cout << "Due date: " << people.back()[5] << "\n";
     showUserMenu();
 }
 
-// =========================
-// FUNCTION: returnBook
-// =========================
-// Allows logged-in users to return a borrowed book.
-// Updates the user's borrowed books and adjusts the stock of the book.
 void Library::returnBook()
 {
     if (!is_logged_in)
@@ -1235,9 +1093,8 @@ void Library::returnBook()
     int bookId;
     cout << "Enter the ID of the book you want to return: ";
     cin >> bookId;
-    cin.ignore(); // bug fixed with aid of ChatGPT: clear newline after input
+    cin.ignore();
 
-    // Check if book exists in library
     ifstream booksFile("books.txt");
     vector<vector<string>> books;
     string line;
@@ -1259,7 +1116,7 @@ void Library::returnBook()
         {
             try
             {
-                int id = stoi(parts[0]); // bug fixed with aid of ChatGPT: safe stoi usage
+                int id = stoi(parts[0]);
                 books.push_back(parts);
             }
             catch (const invalid_argument &)
@@ -1282,12 +1139,10 @@ void Library::returnBook()
         return;
     }
 
-    // Check if user has borrowed this book
     ifstream peopleIn("People.txt");
     vector<vector<string>> people;
     bool hasBorrowed = false;
 
-    // Skip header
     getline(peopleIn, line);
 
     while (getline(peopleIn, line))
@@ -1327,7 +1182,6 @@ void Library::returnBook()
                 if (pos != string::npos)
                 {
                     hasBorrowed = true;
-                    // Remove the book from borrowed list
                     if (borrowedBooks == bookPattern)
                     {
                         parts[3] = "None";
@@ -1336,7 +1190,6 @@ void Library::returnBook()
                     }
                     else
                     {
-                        // Handle cases where the book is first, last, or in middle of list
                         if (pos > 0 && borrowedBooks[pos - 2] == ',')
                         {
                             borrowedBooks.erase(pos - 2, bookPattern.length() + 2);
@@ -1365,7 +1218,6 @@ void Library::returnBook()
         return;
     }
 
-    // Write updated people data
     ofstream peopleOut("People.txt");
     peopleOut << "\"ID\", \"Name\", \"Role\", \"Books Borrowed\", \"Time Borrowed\", \"Due Date\", \"Late Fees\"\n";
     for (const auto &person : people)
@@ -1375,7 +1227,6 @@ void Library::returnBook()
     }
     peopleOut.close();
 
-    // Update book stock
     for (auto &book : books)
     {
         if (stoi(book[0]) == bookId)
@@ -1385,7 +1236,6 @@ void Library::returnBook()
         }
     }
 
-    // Write updated books data
     ofstream booksOut("books.txt");
     for (const auto &book : books)
     {
@@ -1401,12 +1251,6 @@ void Library::returnBook()
     showUserMenu();
 }
 
-// =========================
-// FUNCTION: calculateLateFees
-// =========================
-// Calculates the late fees for a borrowed book based on the current date and the due date.
-// Late fee is $1 per day for students and $0.50 per day for faculty.
-// function from DeepSeek AI
 double Library::calculateLateFees(const string &dueDate, UserRole role)
 {
     if (dueDate == "N/A" || dueDate.empty())
@@ -1414,7 +1258,6 @@ double Library::calculateLateFees(const string &dueDate, UserRole role)
         return 0.0;
     }
 
-    // Edit made by DeepSeek AI: Added more robust date parsing
     int year, month, day;
     if (sscanf(dueDate.c_str(), "%d-%d-%d", &year, &month, &day) != 3)
     {
@@ -1422,7 +1265,6 @@ double Library::calculateLateFees(const string &dueDate, UserRole role)
         return 0.0;
     }
 
-    // Edit made by DeepSeek AI: Added comprehensive time handling with error checking
     time_t now = time(0);
     if (now == -1)
     {
@@ -1447,13 +1289,11 @@ double Library::calculateLateFees(const string &dueDate, UserRole role)
     currentTm = *temp;
 #endif
 
-    // Set up due date struct with validation
     tm dueTm = {0};
     dueTm.tm_year = year - 1900;
     dueTm.tm_mon = month - 1;
     dueTm.tm_mday = day;
 
-    // Edit made by DeepSeek AI: Validate date components
     if (dueTm.tm_year < 0 || dueTm.tm_mon < 0 || dueTm.tm_mon > 11 || dueTm.tm_mday < 1 || dueTm.tm_mday > 31)
     {
         cerr << "Warning: Invalid due date components: " << dueDate << "\n";
@@ -1467,30 +1307,21 @@ double Library::calculateLateFees(const string &dueDate, UserRole role)
         return 0.0;
     }
 
-    // Calculate difference in seconds
     double secondsLate = difftime(now, dueTime);
     if (secondsLate <= 0)
     {
         return 0.0;
     }
 
-    // Convert to days
     const int secondsPerDay = 60 * 60 * 24;
     int daysLate = static_cast<int>(secondsLate / secondsPerDay);
 
-    // Edit made by DeepSeek AI: Added minimum fee calculation
     double feePerDay = (role == FACULTY) ? 0.50 : 1.00;
     double fee = daysLate * feePerDay;
 
-    // Ensure minimum fee is $0.00 (no negative fees)
     return max(0.0, fee);
 }
 
-// =========================
-// FUNCTION: checkLateFees
-// =========================
-// Allows admin users to view all users with late fees.
-// Dynamically calculates lateness fees and updates the People.txt file.
 void Library::checkLateFees()
 {
     if (current_role != ADMIN)
@@ -1510,7 +1341,6 @@ void Library::checkLateFees()
     string line;
     bool headerShown = false;
 
-    // Skip header
     getline(peopleFile, line);
 
     while (getline(peopleFile, line))
@@ -1580,11 +1410,6 @@ void Library::checkLateFees()
     showUserMenu();
 }
 
-// =========================
-// FUNCTION: viewBorrowedBooks
-// =========================
-// Displays the books currently borrowed by the logged-in user.
-// Includes details such as borrow date, due date, and lateness fees (if any).
 void Library::viewBorrowedBooks(bool returnToMenu)
 {
     if (!is_logged_in)
@@ -1604,7 +1429,6 @@ void Library::viewBorrowedBooks(bool returnToMenu)
     string line;
     bool found = false;
 
-    // Skip header
     getline(peopleFile, line);
 
     while (getline(peopleFile, line))
@@ -1640,7 +1464,6 @@ void Library::viewBorrowedBooks(bool returnToMenu)
             cout << "Borrow Date: " << parts[4] << endl;
             cout << "Due Date: " << parts[5] << endl;
 
-            // Calculate and display late fees if any
             string roleStr = parts[2];
             UserRole role = (roleStr == "Faculty") ? FACULTY : STUDENT;
             double lateFees = calculateLateFees(parts[5], role);
@@ -1668,11 +1491,6 @@ void Library::viewBorrowedBooks(bool returnToMenu)
     }
 }
 
-// =========================
-// FUNCTION: showMainMenu
-// =========================
-// Displays the main menu for users who are not logged in.
-// Provides options to log in, sign up, or exit the system.
 void Library::showMainMenu()
 {
     if (!checkFileExists("books.txt") || !checkFileExists("People.txt") || !checkFileExists("users.txt"))
@@ -1714,14 +1532,9 @@ void Library::showMainMenu()
     }
 }
 
-// =========================
-// FUNCTION: showUserMenu
-// =========================
-// Displays the menu for logged-in users based on their role.
-// Admins, faculty, and students have different options available.
 void Library::showUserMenu()
 {
-    while (is_logged_in) // Only show menu while logged in
+    while (is_logged_in)
     {
         int choice;
         cout << "\n========== Library Management System ==========\n";
@@ -1769,7 +1582,7 @@ void Library::showUserMenu()
             switch (choice)
             {
             case 1:
-                displayBooks(false); // bug fixed with aid of ChatGPT: prevent re-entry into admin menu loop
+                displayBooks(false);
                 break;
             case 2:
                 searchBooks();
@@ -1796,8 +1609,8 @@ void Library::showUserMenu()
                 returnBook();
                 break;
             case 10:
-                logout(); // FIX FROM Copilot AI: Added return to break out of menu loop completely
-                return;   // Exit the menu completely after logout
+                logout();
+                return;
             case 11:
                 cout << "Goodbye!\n";
                 exit(0);
@@ -1810,7 +1623,7 @@ void Library::showUserMenu()
             switch (choice)
             {
             case 1:
-                displayBooks(false); // bug fixed with aid of ChatGPT: prevent re-entry into admin menu loop
+                displayBooks(false);
                 break;
             case 2:
                 searchBooks();
@@ -1825,8 +1638,8 @@ void Library::showUserMenu()
                 returnBook();
                 break;
             case 6:
-                logout(); // FIX FROM Copilot AI: Added return to break out of menu loop completely
-                return;   // Exit the menu completely after logout
+                logout();
+                return;
             case 7:
                 cout << "Goodbye!\n";
                 exit(0);
@@ -1836,14 +1649,9 @@ void Library::showUserMenu()
         }
     }
 
-    // If we get here, the user is no longer logged in
-    showMainMenu(); // Return to main menu
+    showMainMenu();
 }
-// =========================
-// FUNCTION: main
-// =========================
-// Entry point of the program.
-// Initializes the library system and displays the main menu.
+
 int main()
 {
     Library lib;

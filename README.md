@@ -39,4 +39,4 @@ src/Menus.cpp              Main and role-specific menus
 
 ## Scope and limitations
 
-This is a learning project using local text files and a terminal interface. Authentication is for demonstration only: passwords are stored in plaintext, so don't use real credentials or treat this as production-ready security.
+The application uses local text files and a terminal interface. Authentication is for demonstration only: passwords are stored in plaintext, so don't use real credentials or treat this as production-ready security.

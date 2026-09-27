@@ -1,0 +1,7 @@
+/build/
+/books.txt
+/People.txt
+/users.txt
+*.exe
+*.o
+*.obj

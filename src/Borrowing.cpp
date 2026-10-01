@@ -79,6 +79,7 @@ void Library::borrowBook()
         bool inQuotes = false;
         string current;
 
+        // Split on commas outside quoted fields so titles such as "A, B" stay intact.
         for (char c : line)
         {
             if (c == '\"')
@@ -309,6 +310,7 @@ void Library::borrowBook()
         }
     }
 
+    // Persist the reduced stock before recording the member's new loan.
     saveBooks(books);
 
     ofstream peopleOut("People.txt");
